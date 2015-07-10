@@ -1,0 +1,36 @@
+<html>
+<head>
+<script>
+  var asmModule;
+function loadError (oError) {
+  throw new URIError("The script " + oError.target.src + " is not accessible.");
+}
+curr_script=document.currentScript;
+function importScript (sSrc, fOnload) {
+  var oScript = document.createElement("script");
+  oScript.type = "text\/javascript";
+  oScript.onerror = loadError;
+  if (fOnload) { oScript.onload = fOnload; }
+  curr_script.parentNode.insertBefore(oScript, document.currentScript);
+  oScript.src = sSrc;
+};
+
+foobar=(function(){k=1; 
+return function(){
+  console.log("getting "+k);
+  k++;
+  if(k>26){
+    importScript("Release/chunks/start.js",function(){
+console.log("starting");
+parent.asmModule=asmModule;
+parent.go();
+
+});
+    return;}
+importScript("Release/chunks/"+k+".js",foobar)}})();
+foobar();
+</script>
+</head>
+<body>
+</body>
+</html>
